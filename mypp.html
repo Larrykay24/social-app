@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Suboxone Hacker Society Forum</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-color: #003366; /* Dark blue */
+            color: #ffffff;
+        }
+        .container {
+            max-width: 400px;
+            margin-top: 50px;
+        }
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #ffffff;
+            margin: 0 auto;
+            display: block;
+        }
+        .profile-info {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .btn-block {
+            margin-top: 15px;
+        }
+        .btn-custom {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Back Arrow and Edit Icon -->
+        <div class="profile-header">
+            <a href="chat.html"><i class="fas fa-arrow-left fa-2x text-white"></i></a>
+            <h2 class="text-center">My Profile</h2>
+            <a href="editpp.html"><i class="fas fa-pencil-alt fa-2x text-white"></i></a>
+        </div>
+
+        <!-- Profile Picture -->
+        <img src="https://via.placeholder.com/100" alt="Profile Picture" class="profile-img" id="profilePicture">
+
+        <!-- Profile Information -->
+        <div class="profile-info">
+            <h3 id="username">Username</h3>
+            <p id="email">email@example.com</p>
+        </div>
+
+        <!-- Buttons -->
+        <button class="btn btn-custom btn-block" onclick="contactDeveloper()">Contact the Developer</button>
+        <button class="btn btn-custom btn-block" onclick="showHelp()">Help</button>
+        <button class="btn btn-custom btn-block" onclick="showFAQ()">FAQ</button>
+    </div>
+
+    <script>
+        // Load user details from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+            if (userDetails) {
+                document.getElementById('username').textContent = userDetails.username || 'Username';
+                document.getElementById('email').textContent = userDetails.email || 'email@example.com';
+                // Set the profile picture if available
+                document.getElementById('profilePicture').src = userDetails.profilePic || 'https://via.placeholder.com/100';
+            }
+        });
+
+        // Placeholder functions for buttons
+        function contactDeveloper() {
+            alert('Contact the developer feature is not yet implemented.');
+        }
+
+        function showHelp() {
+            alert('Help feature is not yet implemented.');
+        }
+
+        function showFAQ() {
+            alert('FAQ feature is not yet implemented.');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Suboxone Hacker Society Forum</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-color: #003366;
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #e5ddd5;
+        }
+        .chat-header {
+            background-color: #003366;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+        }
+        .chat-header .back-button {
+            font-size: 1.5em;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .chat-header .profile-info {
+            display: flex;
+            align-items: center;
+        }
+        .chat-header .profile-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .chat-header .profile-info .friend-name {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .chat-header .icons i {
+            font-size: 1.5em;
+            cursor: pointer;
+            margin-left: 15px;
+        }
+        .chat-content {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .message {
+            background-color: #fff;
+            color: black;
+            padding: 8px 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            max-width: 60%;
+            display: inline-block;
+            word-wrap: break-word;
+            clear: both;
+        }
+        .sent {
+            align-self: flex-end;
+            background-color: #003366;
+            color: #fff;
+            text-align: right;
+            float: right;
+        }
+        .received {
+            align-self: flex-start;
+            background-color: #fff;
+            text-align: left;
+            float: left;
+        }
+        .chat-footer {
+            background-color: #f0f0f0;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            border-top: 1px solid #ddd;
+            position: relative;
+        }
+        .chat-footer input {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+        .chat-footer input:focus {
+            outline: none;
+        }
+        .chat-footer .icons {
+            display: flex;
+            align-items: center;
+        }
+        .chat-footer .icons i {
+            font-size: 1.5em;
+            cursor: pointer;
+            margin-left: 10px;
+            color: #003366;
+        }
+        .attachment-menu {
+            position: absolute;
+            bottom: 60px;
+            left: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+        }
+        .attachment-menu button {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            text-align: left;
+            width: 100%;
+        }
+        .attachment-menu button:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <i class="fas fa-arrow-left back-button" onclick="window.location.href='chat.html'" aria-label="Back to chat"></i>
+            <div class="profile-info">
+                <img src="https://via.placeholder.com/40" alt="Friend's Profile Picture">
+                <div class="friend-name">Friend Name</div>
+            </div>
+            <div class="icons">
+                <i class="fas fa-phone" aria-label="Call"></i>
+                <i class="fas fa-video" aria-label="Video Call"></i>
+                <i class="fas fa-ellipsis-v" aria-label="More options"></i>
+            </div>
+        </div>
+
+        <div class="chat-content" id="chatContent">
+            <div class="message received">Hello, how are you?</div>
+            <div class="message sent">I'm good, thanks! How about you?</div>
+        </div>
+
+        <div class="chat-footer">
+            <input type="text" id="messageInput" placeholder="Type a message" aria-label="Message input">
+            <div class="icons">
+                <i class="fas fa-paperclip" id="clipIcon" title="Attach"></i>
+                <i id="sendBtn" class="fas fa-paper-plane" title="Send"></i>
+            </div>
+            <div class="attachment-menu" id="attachmentMenu">
+                <button onclick="alert('Send Document')">Document</button>
+                <button onclick="alert('Send Picture')">Picture</button>
+                <button onclick="alert('Send Video')">Video</button>
+                <button onclick="alert('Send Audio')">Audio</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const clipIcon = document.getElementById('clipIcon');
+        const attachmentMenu = document.getElementById('attachmentMenu');
+        const chatContent = document.getElementById('chatContent');
+
+        // Connect to the WebSocket server
+        const socket = new WebSocket('ws://your-websocket-server.com'); // Replace with your WebSocket server URL
+
+        // Listen for incoming messages
+        socket.onmessage = function(event) {
+            const message = JSON.parse(event.data);
+            addMessageToChat(message.sender, message.text);
+        };
+
+        sendBtn.addEventListener('click', () => {
+            const messageText = messageInput.value.trim();
+            if (messageText !== '') {
+                const message = { sender: 'You', text: messageText }; // Create a message object
+                socket.send(JSON.stringify(message)); // Send message to the server
+                addMessageToChat(message.sender, message.text); // Add message to chat
+                messageInput.value = '';
+                chatContent.scrollTop = chatContent.scrollHeight; // Scroll to the bottom
+                attachmentMenu.style.display = 'none';
+            }
+        });
+
+        // Add message to chat
+        function addMessageToChat(sender, text) {
+            const newMessage = document.createElement('div');
+            newMessage.className = 'message sent';
+            newMessage.innerHTML = `<strong>${sender}:</strong> ${text}`; // Include sender's name
+            chatContent.appendChild(newMessage);
+            chatContent.scrollTop = chatContent.scrollHeight; // Scroll to the bottom
+        }
+
+        // Send message on Enter key press
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendBtn.click();
+                e.preventDefault(); // Prevent new line
+            }
+        });
+
+        clipIcon.addEventListener('click', () => {
+            attachmentMenu.style.display = attachmentMenu.style.display === 'none' || attachmentMenu.style.display === '' ? 'flex' : 'none';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!clipIcon.contains(e.target) && !attachmentMenu.contains(e.target)) {
+                attachmentMenu.style.display = 'none';
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

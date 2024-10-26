@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Suboxone Hacker Society Forum</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-color: #003366; /* Dark blue */
+            color: #000000; /* Change text color to black */
+            background-image: url('https://www.pngitem.com/pimgs/m/519-5193585_message-icon-background-message-icon-png-transparent-png.png');
+            background-repeat: no-repeat;
+            background-size: 50px;
+            background-position: center;
+        }
+        .container {
+            max-width: 400px;
+            margin-top: 100px;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            background-color: rgba(255, 255, 255, 0.9); /* Milk white */
+        }
+        .profile-pic {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #007bff; /* Blue border */
+        }
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .change-pic {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            padding: 5px;
+            cursor: pointer;
+        }
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4 text-white">Suboxone Hacker Society Forum</h1>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-center">Profile</h2>
+                
+                <div class="profile-pic">
+                    <img id="profilePic" src="https://via.placeholder.com/100" alt="Profile Picture">
+                    <input type="file" id="uploadPic" style="display:none;" accept="image/*">
+                    <i class="fas fa-pencil-alt change-pic" onclick="document.getElementById('uploadPic').click();"></i>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="usernameInput">Username:</label>
+                    <input type="text" id="usernameInput" class="form-control" placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label for="bioInput">Bio:</label>
+                    <textarea id="bioInput" class="form-control" rows="3" placeholder="Write a brief bio"></textarea>
+                </div>
+                <button id="saveProfile" class="btn btn-primary btn-block">Save Profile</button>
+            </div>
+        </div>
+
+        <div class="footer-text">
+            <p>© 2024 Suboxone Hacker Society. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // Load user details from localStorage
+        let userDetails = JSON.parse(localStorage.getItem('userDetails')) || {};
+
+        if (userDetails) {
+            document.getElementById('usernameInput').value = userDetails.username || '';
+            document.getElementById('bioInput').value = userDetails.bio || '';
+            if (userDetails.profilePic) {
+                document.getElementById('profilePic').src = userDetails.profilePic;
+            }
+        }
+
+        // Handle profile picture upload
+        document.getElementById('uploadPic').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePic').src = e.target.result;
+                    // Save profile picture in localStorage
+                    userDetails.profilePic = e.target.result;
+                    localStorage.setItem('userDetails', JSON.stringify(userDetails));
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Save profile details
+        document.getElementById('saveProfile').addEventListener('click', function() {
+            const username = document.getElementById('usernameInput').value;
+            const bio = document.getElementById('bioInput').value;
+
+            if (username && bio) {
+                userDetails.username = username;
+                userDetails.bio = bio;
+                localStorage.setItem('userDetails', JSON.stringify(userDetails));
+                alert('Profile saved successfully!');
+                // Redirect to chat.html
+                window.location.href = 'chat.html';
+            } else {
+                alert('Please fill in both the username and bio.');
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

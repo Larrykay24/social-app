@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Suboxone Hacker Society Forum</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-color: #003366; /* Dark blue */
+        }
+        .home-container {
+            max-width: 600px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #e5ddd5; /* WhatsApp-like background */
+        }
+        .home-header {
+            background-color: #003366;
+            color: white;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+        }
+        .home-header .profile {
+            display: flex;
+            align-items: center;
+        }
+        .home-header .profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .home-header .username {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .home-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .actions {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 10px;
+        }
+        .actions button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 30%;
+            text-align: center;
+        }
+        .friend-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .friend-list .friend-item {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .friend-list .friend-item:hover {
+            background-color: #f0f0f0;
+        }
+        .friend-list .friend-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .settings-icon {
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="home-container">
+        <div class="home-header">
+            <div class="profile" onclick="location.href='mypp.html'">
+                <img src="https://via.placeholder.com/40" alt="Profile">
+                <div class="username">User Name</div>
+            </div>
+            <div class="settings" onclick="location.href='settings.html'">
+                <i class="fas fa-cog settings-icon"></i>
+            </div>
+        </div>
+        <div class="home-content">
+            <div class="actions">
+                <button id="newChat">New Chat</button>
+                <button id="createGroup">Create Group</button>
+                <button id="createChannel">Create Channel</button>
+            </div>
+            <ul class="friend-list" id="friendList">
+                <!-- Friend items will appear here -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Sample list of friends for demonstration
+        const friends = [
+            { name: "John Doe", avatar: "https://via.placeholder.com/40" },
+            { name: "Jane Smith", avatar: "https://via.placeholder.com/40" },
+            { name: "Alice Johnson", avatar: "https://via.placeholder.com/40" },
+            { name: "Bob Brown", avatar: "https://via.placeholder.com/40" }
+        ];
+
+        // Populate the friend list
+        const friendList = document.getElementById('friendList');
+        friends.forEach(friend => {
+            const li = document.createElement('li');
+            li.classList.add('friend-item');
+            li.innerHTML = `
+                <img src="${friend.avatar}" alt="${friend.name}">
+                <span class="friend-name">${friend.name}</span>
+            `;
+            // Redirect to chat page on click
+            li.addEventListener('click', () => {
+                window.location.href = 'chatst.html?name=' + encodeURIComponent(friend.name);
+            });
+            friendList.appendChild(li);
+        });
+
+        // Event listeners for buttons
+        document.getElementById('newChat').addEventListener('click', () => {
+            alert('Start a new chat');
+        });
+        document.getElementById('createGroup').addEventListener('click', () => {
+            alert('Create a new group');
+        });
+        document.getElementById('createChannel').addEventListener('click', () => {
+            alert('Create a new channel');
+        });
+
+        // Load user details (username and profile picture) from localStorage
+        const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+        if (userDetails) {
+            document.querySelector('.username').textContent = userDetails.username || 'User';
+            if (userDetails.profilePic) {
+                document.querySelector('.profile img').src = userDetails.profilePic;
+            }
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

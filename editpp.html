@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - Suboxone Hacker Society Forum</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-color: #003366; /* Dark blue */
+            color: #ffffff;
+        }
+        .container {
+            max-width: 400px;
+            margin-top: 50px;
+        }
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #ffffff;
+            margin: 0 auto;
+            display: block;
+            position: relative;
+        }
+        .edit-icon {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: #003366;
+            border-radius: 50%;
+            color: #ffffff;
+            padding: 5px;
+            cursor: pointer;
+        }
+        h2 {
+            font-size: 1.5em; /* Reduced text size */
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-header">
+            <a href="mypp.html"><i class="fas fa-arrow-left fa-2x text-white"></i></a>
+            <h2>Edit Profile</h2>
+        </div>
+
+        <div class="text-center">
+            <img src="https://via.placeholder.com/100" alt="Profile Picture" class="profile-img" id="editProfilePicture">
+            <div class="edit-icon" id="editProfilePicIcon"><i class="fas fa-pencil-alt"></i></div>
+        </div>
+
+        <form id="editProfileForm">
+            <div class="form-group">
+                <label for="newUsername">Username</label>
+                <input type="text" class="form-control" id="newUsername" placeholder="Enter new username" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+        </form>
+    </div>
+
+    <script>
+        // Load current username
+        document.addEventListener('DOMContentLoaded', function() {
+            const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+            if (userDetails) {
+                document.getElementById('newUsername').value = userDetails.username;
+                if (userDetails.profilePic) {
+                    document.getElementById('editProfilePicture').src = userDetails.profilePic || 'https://via.placeholder.com/100';
+                }
+            }
+        });
+
+        // Open file dialog on pencil icon click
+        document.getElementById('editProfilePicIcon').addEventListener('click', function() {
+            const newProfilePic = document.createElement('input');
+            newProfilePic.type = 'file';
+            newProfilePic.accept = 'image/*';
+            newProfilePic.style.display = 'none';
+            document.body.appendChild(newProfilePic);
+
+            newProfilePic.click();
+
+            newProfilePic.addEventListener('change', function() {
+                const file = newProfilePic.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('editProfilePicture').src = e.target.result;
+                        const userDetails = JSON.parse(localStorage.getItem('userDetails')) || {};
+                        userDetails.profilePic = e.target.result;
+                        localStorage.setItem('userDetails', JSON.stringify(userDetails));
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Remove the input element after use
+            newProfilePic.remove();
+        });
+
+        // Save changes function
+        document.getElementById('editProfileForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting
+
+            const newUsername = document.getElementById('newUsername').value;
+
+            const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+            if (userDetails) {
+                userDetails.username = newUsername;
+                localStorage.setItem('userDetails', JSON.stringify(userDetails));
+                alert('Profile updated successfully!');
+                window.location.href = 'mypp.html';
+            }
+        });
+    </script>
+</body>
+</html>
